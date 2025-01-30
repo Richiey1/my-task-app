@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { useState, useEffect } from 'react';
 import abi from '../abi.json';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 const App = () => {
@@ -35,21 +36,24 @@ const App = () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const coreContract = new ethers.Contract(myContractAddress, abi, signer);
-
+  
         console.log("Adding Task:", { taskText, taskTitle });
-
+  
         const tx = await coreContract.addTask(taskText, taskTitle, false);
         await tx.wait();
-
+  
+        toast.success('Task added successfully!');
         setTaskText("");
         setTaskTitle("");
-
+  
         getTasks();
       } catch (error) {
         console.error("Error adding task:", error);
+        toast.error('Task failed!');
       }
     }
   };
+  
 
   const deleteTask = async (taskId) => {
     if (window.ethereum) {
@@ -58,18 +62,21 @@ const App = () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const coreContract = new ethers.Contract(myContractAddress, abi, signer);
-
+  
         console.log("Deleting Task ID:", taskId);
-
+  
         const tx = await coreContract.deleteTask(taskId);
         await tx.wait();
-
+  
+        toast.success("Task deleted successfully!");
         getTasks();
       } catch (error) {
         console.error("Error deleting task:", error);
+        toast.error("Task deletion failed!");
       }
     }
   };
+  
 
   useEffect(() => {
     getTasks();
