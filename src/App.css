@@ -57,6 +57,7 @@ li {
 
 li button {
   background-color: #dc3545;
+  flex-shrink: 0;
 }
 
 li button:hover {
